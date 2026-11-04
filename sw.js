@@ -1,7 +1,8 @@
 /* Service worker: guarda o app no aparelho para abrir sem internet.
    Ao publicar uma versão nova, aumente o número em VERSAO. */
-const VERSAO="minha-diaria-v7";
-const ARQUIVOS=["./","./index.html","./styles.css","./app.js","./premium.js","./manifest.webmanifest","./privacidade.html",
+const VERSAO="minha-diaria-v8";
+const ARQUIVOS=["./","./index.html","./styles.css",
+  "./js/base.js","./js/interface.js","./js/lancamento.js","./js/inicio.js","./js/dias.js","./js/contas.js","./js/rotina.js","./js/ajustes.js","./js/configuracao.js","./js/premium-tela.js","./js/pesquisa.js","./js/inicia.js","./premium.js","./manifest.webmanifest","./privacidade.html",
   "./icons/icon-192.png","./icons/icon-512.png","./icons/icon-maskable-512.png"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(VERSAO).then(c=>c.addAll(ARQUIVOS)).then(()=>self.skipWaiting()))});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==VERSAO).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});

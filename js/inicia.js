@@ -1,0 +1,12 @@
+/* Minha Diária · Início do app: desenha todas as telas e abre a configuração na primeira vez.
+   Precisa ser o último arquivo carregado. */
+"use strict";
+
+/* ---------- geral ---------- */
+function tudo(){const{ini,fim}=limites(cid);$("cNome").textContent=nomeCiclo(cid);
+  $("cDatas").textContent=`${pad(ini.getDate())}/${pad(ini.getMonth()+1)} a ${pad(fim.getDate())}/${pad(fim.getMonth()+1)}`;
+  $("proTag").hidden=!pro();$("upInicio").hidden=pro();
+  renderInicio();renderDias();renderContas();renderRotina();renderEsp();renderAjustes()}
+aplicaTema();tudo();mostra(location.hash.slice(1)||"inicio");
+if(!S.configurado)abreWizard();
+if("serviceWorker" in navigator&&location.protocol==="https:")window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
