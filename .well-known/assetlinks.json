@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.joaomaiab.minhadiaria",
+        "sha256_cert_fingerprints": ["A8:DA:26:BA:EB:FE:9D:EC:D9:29:1B:19:77:77:EF:B5:90:13:72:1B:E6:50:BA:EE:B8:4F:65:06:E4:3A:B2:36"]
+      }
+    }]
