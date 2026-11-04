@@ -1,6 +1,6 @@
 /* Service worker: guarda o app no aparelho para abrir sem internet.
    Ao publicar uma versão nova, aumente o número em VERSAO. */
-const VERSAO="meta-do-dia-v6";
+const VERSAO="minha-diaria-v7";
 const ARQUIVOS=["./","./index.html","./styles.css","./app.js","./premium.js","./manifest.webmanifest","./privacidade.html",
   "./icons/icon-192.png","./icons/icon-512.png","./icons/icon-maskable-512.png"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(VERSAO).then(c=>c.addAll(ARQUIVOS)).then(()=>self.skipWaiting()))});

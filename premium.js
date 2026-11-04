@@ -10,7 +10,7 @@ const CFG={
   // Sem ele, a Google reembolsa a assinatura em 3 dias. Veja o LEIAME.
   confirmaURL:"",
   // Código para testar o Premium antes da Play. Apague antes de publicar.
-  codigoTeste:"METADODIA-TESTE"
+  codigoTeste:"MINHADIARIA-TESTE"
 };
 const PLAY="https://play.google.com/billing";
 let svc=null;

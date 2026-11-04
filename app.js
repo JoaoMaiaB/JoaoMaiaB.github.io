@@ -1,4 +1,4 @@
-/* Meta do Dia: controle diário para motoristas de aplicativo.
+/* Minha Diária: controle diário para motoristas de aplicativo.
    Tudo fica no aparelho (localStorage). A única chamada externa é a Tabela FIPE, na pesquisa do Premium. */
 (function(){
 "use strict";
@@ -446,15 +446,15 @@ function renderAjustes(){const cd=$("chipsDia");cd.innerHTML="";const opc=[1,5,1
   document.querySelectorAll("#tema button").forEach(b=>b.setAttribute("aria-checked",String(b.dataset.t===(S.cfg.tema||"auto"))));
   const cp=$("cardPremium");
   cp.innerHTML=pro()?`<h2>Premium ativo</h2><p class="muted">${S.premium.fonte==="play"?"Assinatura pela Google Play. Para cancelar, abra a Play Store › Pagamentos e assinaturas.":"Liberado neste aparelho."}</p>`
-    :`<h2>Meta do Dia Premium</h2><p class="muted">Finanças completas (cartões, empréstimos, aluguel, dívidas) e pesquisa de custos do carro.</p><button type="button" class="btn" data-premium>Conhecer o Premium</button>`}
+    :`<h2>Minha Diária Premium</h2><p class="muted">Finanças completas (cartões, empréstimos, aluguel, dívidas) e pesquisa de custos do carro.</p><button type="button" class="btn" data-premium>Conhecer o Premium</button>`}
 let tDia=null;
 function mudaDia(n,devagar){S.cfg.diaCiclo=n;salva();clearTimeout(tDia);const ap=()=>{cid=cidDe(hoje);tudo()};if(devagar)tDia=setTimeout(ap,600);else ap()}
 $("cfgInicio").addEventListener("change",ev=>{S.cfg.inicio=ev.target.value;salva();tudo()});
 document.querySelectorAll("#tema button").forEach(b=>b.onclick=()=>{S.cfg.tema=b.dataset.t;salva();aplicaTema();renderAjustes()});
 function aplicaTema(){const t=S.cfg.tema;if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);else document.documentElement.removeAttribute("data-theme");
   const esc_=t==="dark"||(t!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches);document.querySelector('meta[name="theme-color"]').setAttribute("content",esc_?"#19201d":"#0f7a5a")}
-$("bkExport").onclick=async()=>{const nome=`meta-do-dia-backup-${hoje}.json`;const blob=new Blob([JSON.stringify(S,null,1)],{type:"application/json"});
-  try{const f=new File([blob],nome,{type:"application/json"});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:"Backup Meta do Dia"});$("bkStatus").textContent="Backup compartilhado.";return}}
+$("bkExport").onclick=async()=>{const nome=`minha-diaria-backup-${hoje}.json`;const blob=new Blob([JSON.stringify(S,null,1)],{type:"application/json"});
+  try{const f=new File([blob],nome,{type:"application/json"});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:"Backup Minha Diária"});$("bkStatus").textContent="Backup compartilhado.";return}}
   catch(e){if(e&&e.name==="AbortError")return}
   const a=el("a",{href:URL.createObjectURL(blob),download:nome});document.body.appendChild(a);a.click();a.remove();$("bkStatus").textContent=`Backup salvo como ${nome} na pasta Downloads.`};
 async function importa(f,statusEl){try{const d=JSON.parse(await f.text());
@@ -462,7 +462,7 @@ async function importa(f,statusEl){try{const d=JSON.parse(await f.text());
       const premAtual=S.premium;S=normaliza(d);if(premAtual.ativo&&premAtual.fonte==="play")S.premium=premAtual;S.configurado=true;salva();cid=cidDe(hoje);aplicaTema();tudo();statusEl.textContent="Backup importado.";return true}
     const ks=d&&typeof d==="object"?Object.keys(d).filter(k=>/^\d{4}-\d{2}-\d{2}$/.test(k)&&typeof d[k]==="number"):[];
     if(ks.length){ks.forEach(k=>S.lanc[k]={...(S.lanc[k]||{}),v:d[k]});salva();tudo();statusEl.textContent=`${ks.length} lançamentos importados.`;return true}
-    statusEl.textContent="Esse arquivo não é um backup do Meta do Dia."}catch(e){statusEl.textContent="Não consegui ler esse arquivo."}return false}
+    statusEl.textContent="Esse arquivo não é um backup do Minha Diária."}catch(e){statusEl.textContent="Não consegui ler esse arquivo."}return false}
 $("bkImport").addEventListener("change",async ev=>{const f=ev.target.files[0];ev.target.value="";if(f)importa(f,$("bkStatus"))});
 $("refazer").onclick=()=>abreWizard();
 $("apagar").onclick=()=>{if(!confirm("Apagar contas, rotina e lançamentos deste aparelho? Isso não pode ser desfeito."))return;
@@ -567,7 +567,7 @@ async function abrePremium(origem){
   const play=await Premium.disponivel();
   if(play){const ds=await Premium.precos();ds.forEach(d=>{if(d.price&&precos[d.itemId])precos[d.itemId]={valor:Number(d.price.value),txt:Number(d.price.value).toLocaleString("pt-BR",{style:"currency",currency:d.price.currency})}});pinta()}
   b.querySelector("#vCta").onclick=async()=>{const st=b.querySelector("#pStatus");
-    if(!play){st.textContent="A assinatura é feita pelo app Meta do Dia instalado da Google Play.";return}
+    if(!play){st.textContent="A assinatura é feita pelo app Minha Diária instalado da Google Play.";return}
     try{await Premium.comprar(sel);ativaPremium("play");if(origem==="pesquisa")abrePesquisa();else fecha("sheet")}
     catch(e){st.textContent=e&&e.message==="confirmacao"?"Não deu para confirmar a compra. Tente de novo em instantes.":"Compra não concluída."}}}
 function ativaPremium(fonte){const era=pro();S.premium={ativo:true,fonte};

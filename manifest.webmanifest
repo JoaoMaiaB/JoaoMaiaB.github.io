@@ -1,6 +1,6 @@
 {
-  "name": "Meta do Dia — controle para motoristas",
-  "short_name": "Meta do Dia",
+  "name": "Minha Diária — controle para motoristas",
+  "short_name": "Minha Diária",
   "description": "Saiba quanto faturar por dia para pagar todas as contas do mês. Para motoristas de aplicativo.",
   "id": "./",
   "start_url": "./index.html",
