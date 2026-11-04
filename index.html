@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Meta do Dia</title>
+<meta name="description" content="Controle diário para motoristas de aplicativo: quanto faturar por dia para pagar todas as contas do mês.">
+<meta name="theme-color" content="#0f7a5a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><img src="icons/icon-192.png" alt="" width="28" height="28"><span>Meta do Dia</span><span class="pro-tag" id="proTag" hidden>Premium</span></div>
+  <div class="cyc" aria-label="Ciclo">
+    <button type="button" id="cPrev" class="ib" aria-label="Ciclo anterior">‹</button>
+    <div class="cyc-txt"><strong id="cNome">–</strong><span id="cDatas" class="num"></span></div>
+    <button type="button" id="cNext" class="ib" aria-label="Próximo ciclo">›</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- INÍCIO -->
+  <section class="view" data-view="inicio">
+    <div class="card hero" id="hero">
+      <p class="hero-q">Quanto você fez hoje?</p>
+      <p class="hero-meta" id="heroMeta"></p>
+      <button type="button" class="btn big" id="heroBtn">Lançar o dia</button>
+      <div class="pend" id="pend" hidden><span class="muted">Faltou lançar:</span><div class="chips" id="pendChips"></div></div>
+    </div>
+
+    <div class="ring-card card">
+      <svg class="ring" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="52" class="ring-bg"/><circle cx="60" cy="60" r="52" class="ring-fg" id="ringFg"/></svg>
+      <div class="ring-txt"><span class="num" id="pPct">0%</span><small>do objetivo</small></div>
+      <dl class="ring-kv">
+        <dt>Precisa fazer no mês</dt><dd class="num" id="tObj">–</dd>
+        <dt>Por dia de trabalho</dt><dd class="num" id="tDia">–</dd>
+        <dt>Feito</dt><dd class="num" id="tFeito">–</dd>
+        <dt>Falta</dt><dd class="num" id="tFalta">–</dd>
+      </dl>
+    </div>
+    <p class="muted center" id="tFaltaNote"></p>
+
+    <div class="card upsell" id="upInicio">
+      <span class="pro-tag">Premium</span>
+      <h2>Controle suas finanças completas</h2>
+      <p>Cadastre cartões, empréstimos, aluguel e dívidas parceladas, um por um. E pesquise o valor do seu carro na Tabela FIPE, o IPVA e os preços de oficinas perto de você.</p>
+      <button type="button" class="btn" data-premium>Conhecer o Premium</button>
+    </div>
+
+    <div class="card fs" id="fsBox">
+      <div><span class="lbl">Falta/Sobra nos dias lançados</span><span class="val num" id="tFS">–</span></div>
+      <span class="note" id="tFSNote"></span>
+    </div>
+
+    <div class="card" id="porApp" hidden>
+      <h2>Quanto veio de cada aplicativo</h2>
+      <dl class="kv" id="porAppKv"></dl>
+    </div>
+
+    <div class="card" id="analise">
+      <h2>Seu plano dá conta?</h2>
+      <p id="aPlano"></p>
+      <details class="mais"><summary>Ver números do plano</summary><dl class="kv" id="aKv"></dl></details>
+    </div>
+  </section>
+
+  <!-- DIAS -->
+  <section class="view" data-view="dias" hidden>
+    <p class="muted">Toque num dia para lançar ou corrigir.</p>
+    <div class="list" id="rows"></div>
+  </section>
+
+  <!-- CONTAS -->
+  <section class="view" data-view="contas" hidden>
+    <div class="card">
+      <h2>Resumo de <span id="resumoNome"></span></h2>
+      <dl class="kv" id="resumoContas"></dl>
+    </div>
+
+    <div class="card">
+      <div class="h-row"><h2>Custos do carro</h2><button type="button" class="btn tiny" id="btnPesquisa">Pesquisar preços <span class="pro-mini">PRO</span></button></div>
+      <p class="muted">Toque num atalho para adicionar. O combustível fica separado, abaixo.</p>
+      <div class="chips add" id="chipsCarro"></div>
+      <div id="listaCarro" class="items"></div>
+    </div>
+
+    <div class="card">
+      <h2>Combustível e custo por km</h2>
+      <p class="muted">No lançamento do dia você informa quanto gastou de combustível. O app calcula a sua média por km.</p>
+      <div id="combBox" class="wz-st"></div>
+      <p class="muted" id="combReal"></p>
+      <div id="rkmBox" class="wz-st"></div>
+      <p class="muted" id="rkmReal"></p>
+      <dl class="kv" id="kmRes"></dl>
+      <p class="muted" id="kmDica"></p>
+      <p class="muted">Óleo, pneus e alinhamento podem ser cadastrados "a cada X km" em Custos do carro. Eles entram aqui.</p>
+    </div>
+
+    <!-- Grátis: um número só -->
+    <div class="card" id="cardCasa">
+      <h2>Sua meta mensal</h2>
+      <label>Quanto quer que sobre no mês (R$)<input type="text" inputmode="decimal" id="cfgRetirada" placeholder="0,00"></label>
+      <p class="muted">O que você quer tirar limpo, depois do carro e do combustível, para pagar suas contas e para você. O app soma com os custos do carro e calcula quanto fazer por dia e por mês.</p>
+    </div>
+    <div class="card upsell" id="cardUpsell">
+      <h2>Deseja ter controle das suas finanças completas?</h2>
+      <p>Com o Premium você cadastra cada conta separada: cartões de crédito, empréstimos, aluguel, contas de casa e dívidas parceladas, e o app avisa quando cada uma termina.</p>
+      <button type="button" class="btn" data-premium>Conhecer o Premium</button>
+    </div>
+
+    <!-- Premium: finanças completas -->
+    <div id="premiumContas" hidden>
+      <div class="card">
+        <h2>Contas da casa e dívidas</h2>
+        <div class="chips add" id="chipsCasa"></div>
+        <div id="listaCasa" class="items"></div>
+      </div>
+      <div class="card">
+        <h2>Faturas e contas só de <span class="nomeCiclo"></span></h2>
+        <p class="muted">Valores que mudam todo mês, como a fatura de cada cartão.</p>
+        <div id="listaExtra" class="items"></div>
+        <div class="row-btns">
+          <button type="button" class="btn ghost" id="addExtra">+ Fatura ou conta</button>
+          <button type="button" class="btn ghost" id="copiaExtra">Copiar do ciclo anterior</button>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Outras entradas</h2>
+        <p class="muted">Salário, pensão, aluguel recebido. Reduz o que você precisa faturar.</p>
+        <div id="listaEnt" class="items"></div>
+        <button type="button" class="btn ghost" id="addEnt">+ Entrada</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROTINA -->
+  <section class="view" data-view="rotina" hidden>
+    <div class="card">
+      <h2>Dias que você roda</h2>
+      <p class="muted">Toque no dia para ligar ou desligar. Ajuste as horas e quanto faz por hora com − e +.</p>
+      <div id="rotina" class="rot"></div>
+      <p class="sum" id="rotSoma"></p>
+    </div>
+    <div class="card">
+      <h2>Datas especiais</h2>
+      <p class="muted">Jogos, shows, feriados. A meta da data especial substitui a da rotina naquele dia.</p>
+      <div id="listaEsp" class="items"></div>
+      <button type="button" class="btn ghost" id="addEsp">+ Data especial</button>
+    </div>
+  </section>
+
+  <!-- AJUSTES -->
+  <section class="view" data-view="ajustes" hidden>
+    <div class="card" id="cardPremium"></div>
+    <div class="card">
+      <h2>Ciclo</h2>
+      <p class="muted">O ciclo é o seu "mês": vai do dia em que as contas vencem até a véspera do próximo vencimento.</p>
+      <div class="chips" id="chipsDia"></div>
+      <p class="muted" id="cfgDiaDica"></p>
+      <label>Começar a contar em <span class="opt">opcional</span><input type="date" id="cfgInicio"></label>
+    </div>
+    <div class="card">
+      <h2>Backup</h2>
+      <p class="muted">Seus dados ficam só neste celular. Faça um backup de vez em quando e guarde no Drive ou no WhatsApp.</p>
+      <div class="row-btns">
+        <button type="button" class="btn" id="bkExport">Salvar backup</button>
+        <label class="btn ghost file">Importar backup<input type="file" id="bkImport" accept="application/json,.json"></label>
+      </div>
+      <p class="status" id="bkStatus" role="status"></p>
+    </div>
+    <div class="card">
+      <h2>Aparência</h2>
+      <div class="seg" id="tema" role="radiogroup" aria-label="Tema">
+        <button type="button" data-t="auto">Automático</button><button type="button" data-t="light">Claro</button><button type="button" data-t="dark">Escuro</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Sobre</h2>
+      <p class="muted">Meta do Dia não tem ligação com Uber, 99, inDrive ou outra empresa. Seus dados ficam no seu aparelho. <a href="privacidade.html">Política de privacidade</a>.</p>
+      <div class="row-btns">
+        <button type="button" class="btn ghost" id="refazer">Refazer configuração inicial</button>
+        <button type="button" class="btn danger" id="apagar">Apagar todos os dados</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<button type="button" class="fab" id="fab" aria-label="Lançar o dia">+</button>
+
+<nav class="tabbar" id="tabbar" aria-label="Seções">
+  <button type="button" data-go="inicio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Início</button>
+  <button type="button" data-go="dias"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v15H4zM4 9h16M8 3v4M16 3v4"/></svg>Dias</button>
+  <button type="button" data-go="contas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6"/></svg>Contas</button>
+  <button type="button" data-go="rotina"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Rotina</button>
+  <button type="button" data-go="ajustes"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>Ajustes</button>
+</nav>
+
+<!-- Folha do teclado: lançar um dia -->
+<div class="sheet" id="padSheet" hidden>
+  <div class="sheet-bg" data-close></div>
+  <div class="sheet-box" role="dialog" aria-modal="true" aria-labelledby="padTitulo">
+    <div class="grab"></div>
+    <div class="pad-head">
+      <div><strong id="padTitulo">Hoje</strong><span class="muted" id="padSub"></span></div>
+      <button type="button" class="ib" data-close aria-label="Fechar">✕</button>
+    </div>
+    <div class="chips" id="padDias"></div>
+    <div class="seg sm" id="padModo" role="radiogroup" aria-label="Formato do lançamento"><button type="button" data-m="rapido">Rápido</button><button type="button" data-m="detalhado">Detalhado</button></div>
+    <div id="padDet" hidden>
+      <div class="pad-apps" id="padApps"></div>
+      <div class="part-head"><span>Corridas particulares</span><button type="button" class="btn tiny" id="padAddPart">+ Corrida particular</button></div>
+      <div id="padPart" class="parts"></div>
+    </div>
+    <div class="pad-fields">
+      <button type="button" class="pf on" id="fVal"><small>Faturamento</small><output class="num" id="padDisplay">R$ 0,00</output></button>
+      <button type="button" class="pf" id="fKm"><small>Km rodados</small><output class="num" id="padKmOut">0 km</output></button>
+      <button type="button" class="pf" id="fComb"><small>Combustível</small><output class="num" id="padCombOut">R$ 0,00</output></button>
+    </div>
+    <p class="muted center pad-lucro" id="padLucro"></p>
+    <div class="chips" id="padAtalhos"></div>
+    <details class="mais" id="padMais"><summary>Horas rodadas <span class="opt">opcional</span></summary>
+      <div class="stepper" id="padHoras"></div>
+    </details>
+    <div class="keys" id="keys"></div>
+    <button type="button" class="btn big" id="padSalvar">Salvar</button>
+  </div>
+</div>
+
+<!-- Folha genérica (configuração inicial, premium, pesquisa) -->
+<div class="sheet" id="sheet" hidden>
+  <div class="sheet-bg" data-close></div>
+  <div class="sheet-box tall" role="dialog" aria-modal="true">
+    <div class="grab"></div>
+    <div id="sheetBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="premium.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
