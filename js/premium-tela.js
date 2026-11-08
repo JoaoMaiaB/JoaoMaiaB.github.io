@@ -21,9 +21,9 @@ async function abrePremium(origem){
     ${pro()?"":`<div class="v-ancora">No plano anual, sai por <b>${brl(porDia)} por dia</b>. Menos do que você ganha em 1 km rodado (${brl(rk)}).</div>
     <div class="v-planos" role="radiogroup" aria-label="Escolha o plano" id="vPlanos"></div>
     <button type="button" class="btn big v-cta" id="vCta"></button>
-    <p class="v-conf">Cancele quando quiser, direto na Play Store, sem multa. Seus dados continuam só no seu celular.</p>
+    <p class="v-conf">A assinatura renova automaticamente pelo mesmo valor no fim de cada período. Cancele quando quiser, direto na Play Store, sem multa. Seus dados continuam só no seu celular.</p>
     <p class="status center" id="pStatus" role="status"></p>
-    <details class="mais"><summary>Tenho um código</summary><div class="r1 code"><input type="text" id="pCod" placeholder="Código" autocapitalize="characters"><button type="button" class="btn" id="pCodOk">Usar</button></div></details>`}
+    ${Premium.local?`<details class="mais"><summary>Tenho um código</summary><div class="r1 code"><input type="text" id="pCod" placeholder="Código" autocapitalize="characters"><button type="button" class="btn" id="pCodOk">Usar</button></div></details>`:""}`}
     </div>`);
   b.parentElement.classList.add("venda-box");
   if(pro())return;
@@ -37,7 +37,7 @@ async function abrePremium(origem){
     card.onclick=()=>{sel=p.sku;pinta()};box.appendChild(card)});
     const p=PLANOS.find(x=>x.sku===sel);b.querySelector("#vCta").textContent=`Quero o plano ${p.nome.toLowerCase()}`};
   pinta();
-  b.querySelector("#pCodOk").onclick=()=>{if(Premium.codigoValido(b.querySelector("#pCod").value)){ativaPremium("codigo");if(origem==="pesquisa")abrePesquisa();else fecha("sheet")}else b.querySelector("#pStatus").textContent="Código inválido."};
+  if(b.querySelector("#pCodOk"))b.querySelector("#pCodOk").onclick=()=>{if(Premium.codigoValido(b.querySelector("#pCod").value)){ativaPremium("codigo");if(origem==="pesquisa")abrePesquisa();else fecha("sheet")}else b.querySelector("#pStatus").textContent="Código inválido."};
   const play=await Premium.disponivel();
   if(play){const ds=await Premium.precos();ds.forEach(d=>{if(d.price&&precos[d.itemId])precos[d.itemId]={valor:Number(d.price.value),txt:Number(d.price.value).toLocaleString("pt-BR",{style:"currency",currency:d.price.currency})}});pinta()}
   b.querySelector("#vCta").onclick=async()=>{const st=b.querySelector("#pStatus");
@@ -47,5 +47,7 @@ async function abrePremium(origem){
 function ativaPremium(fonte){const era=pro();S.premium={ativo:true,fonte};
   if(!era&&+S.cfg.retirada>0&&!casaDe().length)S.desp.push({id:uid(),nome:"Para casa (valor geral)",valor:+S.cfg.retirada,freq:"mensal",tipo:"pessoal",desde:"",parcelas:0});
   salva();tudo();toast("Premium ativado! Suas contas completas estão na aba Contas.")}
+// Premium liberado por código de teste só vale no computador de testes
+if(S.premium.fonte==="codigo"&&!Premium.local){S.premium={ativo:false,fonte:""};salva()}
 (async()=>{const r=await Premium.ativoNaPlay();if(r===true&&!pro())ativaPremium("play");
   else if(r===false&&S.premium.fonte==="play"){S.premium={ativo:false,fonte:""};salva();tudo()}})();

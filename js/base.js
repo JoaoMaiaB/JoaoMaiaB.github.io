@@ -42,6 +42,9 @@ function normaliza(d){const b=vazio();
   ["desp","ent","esp"].forEach(k=>{if(!Array.isArray(o[k]))o[k]=[]});
   if(!o.extra||typeof o.extra!=="object")o.extra={};
   if(!o.lanc||typeof o.lanc!=="object")o.lanc={};
+  // backup vindo de fora: só aceita dias no formato AAAA-MM-DD e valores numéricos
+  for(const k in o.lanc){const L=o.lanc[k];if(!/^\d{4}-\d{2}-\d{2}$/.test(k)||!L||typeof L!=="object"||typeof L.v!=="number"||!isFinite(L.v)){delete o.lanc[k];continue}
+    ["km","c","h"].forEach(c=>{if(L[c]!=null&&!(typeof L[c]==="number"&&isFinite(L[c])))delete L[c]})}
   o.cfg.diaCiclo=Math.min(28,Math.max(1,parseInt(o.cfg.diaCiclo)||1));
   // backups da versão 1 já vinham configurados
   // versões antigas guardavam o combustível em %: vira uma estimativa por km
