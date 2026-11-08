@@ -7,6 +7,7 @@ const MESES=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agos
 const DIAS=["dom","seg","ter","qua","qui","sex","sáb"];
 const DIAS_LONGOS=["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
 const ORDEM_SEMANA=[1,2,3,4,5,6,0];
+const TURNOS=["Madrugada","Manhã","Tarde","Noite"];
 const FIPE="https://parallelum.com.br/fipe/api/v1/carros";
 
 /* ---------- utilidades ---------- */
@@ -44,7 +45,8 @@ function normaliza(d){const b=vazio();
   if(!o.lanc||typeof o.lanc!=="object")o.lanc={};
   // backup vindo de fora: só aceita dias no formato AAAA-MM-DD e valores numéricos
   for(const k in o.lanc){const L=o.lanc[k];if(!/^\d{4}-\d{2}-\d{2}$/.test(k)||!L||typeof L!=="object"||typeof L.v!=="number"||!isFinite(L.v)){delete o.lanc[k];continue}
-    ["km","c","h"].forEach(c=>{if(L[c]!=null&&!(typeof L[c]==="number"&&isFinite(L[c])))delete L[c]})}
+    ["km","c","h","g","l"].forEach(c=>{if(L[c]!=null&&!(typeof L[c]==="number"&&isFinite(L[c])))delete L[c]})
+    if(L.t!=null&&!(Array.isArray(L.t)&&L.t.every(x=>TURNOS.includes(x))))delete L.t;if(L.posto!=null&&typeof L.posto!=="string")delete L.posto}
   o.cfg.diaCiclo=Math.min(28,Math.max(1,parseInt(o.cfg.diaCiclo)||1));
   // backups da versão 1 já vinham configurados
   // versões antigas guardavam o combustível em %: vira uma estimativa por km
@@ -110,4 +112,7 @@ function contas(c){
   const K=custoKm(c);const pct=Math.min(.85,K.total/K.rk);const obj=liquido/(1-pct);
   const pComb=K.comb/K.rk,pMan=K.manut/K.rk;
   return{carro,casa,ciclo,entradas,saidas,liquido,pct,obj,comb:obj*pComb,manut:obj*pMan,K,pComb,pMan}}
-const lucroDia=L=>{if(!L||!(L.v>0))return 0;const K=custoKm();const km=L.km>0?L.km:L.v/K.rk;return L.v-km*K.total};
+// Lucro do dia: faturamento − km × custo por km − gastos do dia (pedágio, lanche, lavagem)
+const lucroDia=L=>{if(!L||!(L.v>0))return 0;const K=custoKm();const km=L.km>0?L.km:L.v/K.rk;return L.v-km*K.total-(+L.g||0)};
+// Km lançados até hoje (base para os avisos de manutenção)
+const totalKm=()=>Object.values(S.lanc).reduce((s,L)=>s+(+L.km||0),0);

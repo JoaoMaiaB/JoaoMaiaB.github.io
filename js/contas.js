@@ -5,7 +5,7 @@
 const PRESET_CARRO=[["Aluguel do carro","semanal"],["Financiamento do carro","mensal"],["Seguro","mensal"],["Estacionamento","semanal"],["Troca de óleo","km",5000],
   ["Pneus","km",40000],["IPVA e licenciamento","meses",12],["Alinhamento e balanceamento","km",10000],["Lavagem","mensal"],["Plano de celular","mensal"],["Outro custo","mensal"]];
 const PRESET_CASA=[["Aluguel","mensal"],["Condomínio","mensal"],["Luz","mensal"],["Água","mensal"],["Gás","mensal"],["Internet","mensal"],["Mercado","mensal"],
-  ["Empréstimo","mensal",0,true],["Cartão parcelado","mensal",0,true],["Plano de saúde","mensal"],["Escola","mensal"],["Pensão","mensal"],["Outra conta","mensal"]];
+  ["DAS do MEI","mensal"],["Empréstimo","mensal",0,true],["Cartão parcelado","mensal",0,true],["Plano de saúde","mensal"],["Escola","mensal"],["Pensão","mensal"],["Outra conta","mensal"]];
 let abrirId=null;
 function chipsPreset(boxId,preset,tipo,listaFn){const b=$(boxId);b.innerHTML="";const usados=new Set(listaFn().map(x=>x.nome));
   preset.forEach(([nome,freq,cada,parc])=>{if(usados.has(nome)&&!/^Outr/.test(nome))return;

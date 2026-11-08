@@ -18,9 +18,10 @@ document.querySelectorAll("#tema button").forEach(b=>b.onclick=()=>{S.cfg.tema=b
 function aplicaTema(){const t=S.cfg.tema;if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);else document.documentElement.removeAttribute("data-theme");
   const esc_=t==="dark"||(t!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches);document.querySelector('meta[name="theme-color"]').setAttribute("content",esc_?"#19201d":"#0f7a5a")}
 $("bkExport").onclick=async()=>{const nome=`minha-diaria-backup-${hoje}.json`;const blob=new Blob([JSON.stringify(S,null,1)],{type:"application/json"});
-  try{const f=new File([blob],nome,{type:"application/json"});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:"Backup Minha Diária"});$("bkStatus").textContent="Backup compartilhado.";return}}
+  try{const f=new File([blob],nome,{type:"application/json"});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:"Backup Minha Diária"});backupFeito();$("bkStatus").textContent="Backup compartilhado.";return}}
   catch(e){if(e&&e.name==="AbortError")return}
-  const a=el("a",{href:URL.createObjectURL(blob),download:nome});document.body.appendChild(a);a.click();a.remove();$("bkStatus").textContent=`Backup salvo como ${nome} na pasta Downloads.`};
+  const a=el("a",{href:URL.createObjectURL(blob),download:nome});document.body.appendChild(a);a.click();a.remove();backupFeito();$("bkStatus").textContent=`Backup salvo como ${nome} na pasta Downloads.`};
+function backupFeito(){S.cfg.ultBackup=hoje;delete S.cfg.adiaBackup;salva();renderAvisos();toast("Backup salvo. Guarde o arquivo no Drive ou no WhatsApp.")}
 async function importa(f,statusEl){try{const d=JSON.parse(await f.text());
     if(d&&d.app==="meta-do-dia"){if(S.configurado&&!confirm("Substituir todos os dados deste aparelho pelos do backup?"))return false;
       const premAtual=S.premium;S=normaliza(d);if(premAtual.ativo&&premAtual.fonte==="play")S.premium=premAtual;S.configurado=true;salva();cid=cidDe(hoje);aplicaTema();tudo();statusEl.textContent="Backup importado.";return true}

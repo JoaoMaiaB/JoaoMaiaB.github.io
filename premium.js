@@ -6,9 +6,11 @@ window.Premium=(function(){
 const CFG={
   // IDs dos produtos criados no Play Console (Monetização > Assinaturas)
   skus:["premium_mensal","premium_semestral","premium_anual"],
-  // Endereço do seu servidor que confirma a compra na API do Google Play.
-  // Sem ele, a Google reembolsa a assinatura em 3 dias. Veja o LEIAME.
-  confirmaURL:"",
+  // Endereço do seu servidor (Cloudflare Worker), sem barra no fim. Ex.: "https://minha-diaria-confirma.joao.workers.dev"
+  // Ele confirma as compras (sem isso, a Google reembolsa em 3 dias) e envia o lembrete diário. Veja servidor/LEIAME.md.
+  servidor:"",
+  // Dias de teste grátis configurados nos planos do Play Console (0 = sem teste grátis)
+  diasGratis:7,
   // Código para testar o Premium no seu computador (localhost) e nos testes automáticos.
   // Ele NÃO funciona no site publicado nem no app da Play, porque qualquer pessoa pode ler este arquivo.
   codigoTeste:"MINHADIARIA-TESTE"
@@ -25,8 +27,8 @@ async function precos(){const s=await servico();if(!s)return[];
   try{return await s.getDetails(CFG.skus)}catch(e){return[]}}
 // Confirma de novo no servidor (ele ignora o que já foi confirmado). Isso salva a venda quando
 // o app fechou ou ficou sem internet logo depois da compra, antes do prazo de 3 dias da Google.
-async function confirma(sku,token){if(!CFG.confirmaURL||!token)return true;
-  try{const r=await fetch(CFG.confirmaURL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sku,token})});return r.ok}catch(e){return false}}
+async function confirma(sku,token){if(!CFG.servidor||!token)return true;
+  try{const r=await fetch(CFG.servidor+"/confirma",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sku,token})});return r.ok}catch(e){return false}}
 async function ativoNaPlay(){const s=await servico();if(!s)return null;
   try{const ps=(await s.listPurchases()).filter(p=>CFG.skus.includes(p.itemId));
     ps.forEach(p=>confirma(p.itemId,p.purchaseToken));return ps.length>0}catch(e){return null}}
@@ -40,5 +42,5 @@ async function comprar(sku){
   if(!ok)throw new Error("confirmacao");
   return true}
 const codigoValido=c=>local&&!!CFG.codigoTeste&&String(c||"").trim().toUpperCase()===CFG.codigoTeste;
-return{disponivel,precos,ativoNaPlay,comprar,codigoValido,local,skus:CFG.skus};
+return{disponivel,precos,ativoNaPlay,comprar,codigoValido,local,skus:CFG.skus,servidor:CFG.servidor,diasGratis:CFG.diasGratis};
 })();

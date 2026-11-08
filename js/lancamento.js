@@ -5,19 +5,21 @@
 // Dois formatos: rápido (um valor só) e detalhado (por aplicativo + corridas particulares)
 const APPS_PADRAO=[{id:"uber",nome:"Uber"},{id:"99",nome:"99"},{id:"indrive",nome:"inDrive"}];
 const apps=()=>[...APPS_PADRAO,...(S.cfg.apps||[])];
-const P={k:hoje,b:{v:"",km:"",c:""},part:[],campo:"v",modo:"rapido",h:0,mexeuH:false};
+const P={k:hoje,b:{v:"",km:"",c:"",g:"",l:""},part:[],t:[],campo:"v",modo:"rapido",h:0,mexeuH:false};
 const padH=stepper({rot:"Horas rodadas",valor:0,passo:.5,min:0,max:24,fmt:v=>nf(v)+" h",on:v=>{P.h=v;P.mexeuH=true}});
 $("padHoras").replaceWith(padH);
 ["1","2","3","4","5","6","7","8","9","00","0","⌫"].forEach(t=>{const b=el("button",{type:"button",class:"key"+(t==="⌫"?" bs":""),"data-k":t,"aria-label":t==="⌫"?"Apagar":t},t);
   b.onclick=()=>{tecla(t);vibra()};$("keys").appendChild(b)});
 function tecla(t){const c=P.campo;if(P.modo==="detalhado"&&c==="v")return;const cur=P.b[c]||"";
-  P.b[c]=t==="⌫"?cur.slice(0,-1):cur.length<(c==="km"?4:8)?(cur+t).replace(/^0+/,""):cur;pintaPad()}
+  P.b[c]=t==="⌫"?cur.slice(0,-1):cur.length<(c==="km"?4:c==="l"?5:8)?(cur+t).replace(/^0+/,""):cur;pintaPad()}
 const cents=s=>(parseInt(s||"0",10)||0)/100;
 const somaApps=()=>apps().reduce((s,a)=>s+cents(P.b["a:"+a.id]),0);
 const somaPart=()=>P.part.reduce((s,x)=>s+(+x.v||0),0);
 const valorPad=()=>P.modo==="detalhado"?Math.round((somaApps()+somaPart())*100)/100:cents(P.b.v);
 const kmPad=()=>parseInt(P.b.km||"0",10)||0;
 const combPad=()=>cents(P.b.c);
+const gasPad=()=>cents(P.b.g);
+const litPad=()=>cents(P.b.l);
 function pf(id,rot,txt,vazio,campo){const b=el("button",{type:"button",class:"pf sm"+(P.campo===campo?" on":"")+(vazio?" zero":"")},`<small>${esc(rot)}</small><output class="num">${txt}</output>`);
   b.onclick=()=>{P.campo=campo;pintaPad()};return b}
 function pintaPad(){const det=P.modo==="detalhado";
@@ -34,11 +36,19 @@ function pintaPad(){const det=P.modo==="detalhado";
       r.appendChild(botaoDel(()=>{P.part.splice(i,1);pintaPad()}));pl.appendChild(r)})}
   const k00=$("keys").querySelector('[data-k="00"]');k00.style.visibility=P.campo==="km"?"hidden":"";
   const v=valorPad(),km=kmPad();const naApp=P.campo==="v"||P.campo.startsWith("a:");
+  // gastos do dia, litros, posto e turno (dentro de "Gastos do dia, horas e turno")
+  $("padGasOut").textContent=brl(gasPad());$("padLitOut").textContent=nf(litPad(),2)+" L";
+  [["fGas","g"],["fLit","l"]].forEach(([id,c])=>{$(id).classList.toggle("on",P.campo===c);$(id).classList.toggle("zero",!P.b[c])});
+  $("fLit").querySelector(".pro-mini").hidden=pro();$("padPostoL").hidden=!(pro()&&litPad()>0);
+  const tb=$("padTurnos");tb.innerHTML="";TURNOS.forEach(t=>{const on=P.t.includes(t);
+    tb.appendChild(el("button",{type:"button",class:"chip"+(on?" on":""),"aria-pressed":String(on),onclick:()=>{P.t=on?P.t.filter(x=>x!==t):[...P.t,t];pintaPad()}},t))});
   $("padSalvar").textContent=naApp&&!P.b.km?"Próximo: km rodados":P.campo==="km"&&!P.b.c?"Próximo: combustível":"Salvar";
   const cm=combMedia();
-  $("padLucro").textContent=P.campo==="km"?"Veja os km do dia no app de corrida ou no painel do carro.":P.campo==="c"?(km>0&&combPad()>0?`Hoje: ${brl(combPad()/km)} por km. Sua média: ${brl(cm.v)} por km.`:"Quanto você gastou de combustível hoje? Se não abasteceu, deixe zero."):det&&P.campo==="v"?"Toque num aplicativo para digitar quanto fez nele.":v>0&&km>0?`Lucro do dia ≈ ${brl(v-km*custoKm().total)}`:""}
+  $("padLucro").textContent=P.campo==="g"?"Pedágio, lanche, lavagem: some tudo o que gastou hoje, fora o combustível.":P.campo==="l"?(litPad()>0&&combPad()>0?`Preço do litro: ${brl(combPad()/litPad())}.`+(km>0?` Consumo hoje: ${nf(km/litPad())} km/l.`:""):"Quantos litros você colocou hoje? Assim o app calcula o consumo e o preço do litro."):P.campo==="km"?"Veja os km do dia no app de corrida ou no painel do carro.":P.campo==="c"?(km>0&&combPad()>0?`Hoje: ${brl(combPad()/km)} por km. Sua média: ${brl(cm.v)} por km.`:"Quanto você gastou de combustível hoje? Se não abasteceu, deixe zero."):det&&P.campo==="v"?"Toque num aplicativo para digitar quanto fez nele.":v>0&&km>0?`Lucro do dia ≈ ${brl(v-km*custoKm().total)}`:""}
 $("fVal").onclick=()=>{if(P.modo==="detalhado"){P.campo="a:"+apps()[0].id}else P.campo="v";pintaPad()};
-$("fKm").onclick=()=>{P.campo="km";pintaPad()};$("fComb").onclick=()=>{P.campo="c";pintaPad()};
+$("fKm").onclick=()=>{P.campo="km";pintaPad()};
+$("fGas").onclick=()=>{P.campo="g";pintaPad()};
+$("fLit").onclick=()=>{if(!pro()){abrePremium();return}P.campo="l";pintaPad()};$("fComb").onclick=()=>{P.campo="c";pintaPad()};
 document.querySelectorAll("#padModo button").forEach(b=>b.onclick=()=>{const m=b.dataset.m;if(m===P.modo)return;
   if(m==="detalhado"){P.campo="a:"+apps()[0].id;if(P.b.v&&!apps().some(a=>P.b["a:"+a.id])&&!P.part.length)P.b["a:"+apps()[0].id]=P.b.v}
   else{P.b.v=String(Math.round(valorPad()*100));if(P.b.v==="0")P.b.v="";P.campo="v"}
@@ -82,11 +92,13 @@ $("padAddPart").onclick=novaCorrida;
 function nomeDia(k){return k===hoje?"Hoje":k===ontem?"Ontem":DIAS_LONGOS[fromKey(k).getDay()]+", "+ddmm(k)}
 function abrePad(k){P.k=k||hoje;const L=S.lanc[P.k];const m=metaDoDia(P.k);
   P.b={v:L&&L.v?String(Math.round(L.v*100)):"",km:L&&L.km?String(Math.round(L.km)):"",c:L&&L.c?String(Math.round(L.c*100)):""};
+  P.b.g=L&&L.g?String(Math.round(L.g*100)):"";P.b.l=L&&L.l?String(Math.round(L.l*100)):"";
+  P.t=L&&L.t?[...L.t]:[];$("padPosto").value=L&&L.posto||"";
   P.part=L&&L.part?L.part.map(x=>({...x})):[];
   if(L&&L.apps)for(const id in L.apps)P.b["a:"+id]=String(Math.round(L.apps[id]*100));
   P.modo=L?(L.apps||L.part?"detalhado":"rapido"):(S.cfg.modoLanc||"rapido");
   P.campo=P.modo==="detalhado"?"a:"+apps()[0].id:"v";
-  P.h=L&&L.h?L.h:m.h||0;P.mexeuH=false;padH.setValor(P.h);$("padMais").open=!!(L&&L.h);
+  P.h=L&&L.h?L.h:m.h||0;P.mexeuH=false;padH.setValor(P.h);$("padMais").open=!!(L&&(L.h||L.g||L.l||(L.t&&L.t.length)));
   $("padTitulo").textContent=nomeDia(P.k);
   $("padSub").textContent=` · ${m.plano}${m.meta?", meta "+brl(m.meta):""}`;
   const dz=$("padDias");dz.innerHTML="";
@@ -107,6 +119,8 @@ document.addEventListener("keydown",ev=>{if($("padSheet").hidden||!$("sheet").hi
   if(/^\d$/.test(ev.key)){tecla(ev.key);ev.preventDefault()}else if(ev.key==="Backspace"){tecla("⌫");ev.preventDefault()}else if(ev.key==="Enter"){tentaSalvar();ev.preventDefault()}});
 function salvaDia(v){const k=P.k;const m=metaDoDia(k);const reg={v};
   const km=v>0?kmPad():0;reg.km=km;reg.c=v>0?combPad():0;if($("padMais").open||P.mexeuH){if(P.h>0)reg.h=P.h}
+  if(v>0){const g=gasPad();if(g>0)reg.g=g;if(P.t.length)reg.t=P.t.filter(t=>TURNOS.includes(t));
+    const l=litPad();if(pro()&&l>0){reg.l=l;const po=$("padPosto").value.trim().slice(0,30);if(po)reg.posto=po}}
   if(v>0&&P.modo==="detalhado"){const ap={};apps().forEach(a=>{const x=cents(P.b["a:"+a.id]);if(x>0)ap[a.id]=x});reg.apps=ap;if(P.part.length)reg.part=P.part}
   S.lanc[k]=reg;salva();fecha("padSheet");
   const c=cidDe(k);if(c!==cid)cid=c;tudo();vibra();
