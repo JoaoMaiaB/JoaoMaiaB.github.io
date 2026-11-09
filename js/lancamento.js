@@ -39,7 +39,7 @@ function pintaPad(){const det=P.modo==="detalhado";
   // gastos do dia, litros, posto e turno (dentro de "Gastos do dia, horas e turno")
   $("padGasOut").textContent=brl(gasPad());$("padLitOut").textContent=nf(litPad(),2)+" L";
   [["fGas","g"],["fLit","l"]].forEach(([id,c])=>{$(id).classList.toggle("on",P.campo===c);$(id).classList.toggle("zero",!P.b[c])});
-  $("fLit").querySelector(".pro-mini").hidden=pro();$("padPostoL").hidden=!(pro()&&litPad()>0);
+  $("fLit").querySelector(".pro-mini").hidden=pro()&&!dev();$("padPostoL").hidden=!(pro()&&litPad()>0);
   const tb=$("padTurnos");tb.innerHTML="";TURNOS.forEach(t=>{const on=P.t.includes(t);
     tb.appendChild(el("button",{type:"button",class:"chip"+(on?" on":""),"aria-pressed":String(on),onclick:()=>{P.t=on?P.t.filter(x=>x!==t):[...P.t,t];pintaPad()}},t))});
   $("padSalvar").textContent=naApp&&!P.b.km?"Próximo: km rodados":P.campo==="km"&&!P.b.c?"Próximo: combustível":"Salvar";

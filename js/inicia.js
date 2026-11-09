@@ -6,7 +6,7 @@
 function tudo(){const{ini,fim}=limites(cid);$("cNome").textContent=nomeCiclo(cid);
   $("cDatas").textContent=`${pad(ini.getDate())}/${pad(ini.getMonth()+1)} a ${pad(fim.getDate())}/${pad(fim.getMonth()+1)}`;
   $("proTag").hidden=!pro();$("upInicio").hidden=pro();
-  renderInicio();renderAvisos();renderConquistas();renderEvol();renderMelhores();renderDias();renderContas();renderAbast();renderRotina();renderEsp();renderAjustes();renderLembrete()}
+  renderInicio();renderAvisos();renderConquistas();renderEvol();renderMelhores();renderDias();renderContas();renderAbast();renderRotina();renderEsp();renderAjustes();renderLembrete();renderDev()}
 aplicaTema();tudo();mostra(location.hash.slice(1)||"inicio");
 if(!S.configurado)abreWizard();
 // toque na notificação do lembrete diário abre o teclado de lançamento

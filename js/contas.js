@@ -11,7 +11,7 @@ function chipsPreset(boxId,preset,tipo,listaFn){const b=$(boxId);b.innerHTML="";
   preset.forEach(([nome,freq,cada,parc])=>{if(usados.has(nome)&&!/^Outr/.test(nome))return;
     if(!pro()&&PRO_CARRO.includes(nome)){b.appendChild(el("button",{type:"button",class:"chip add locked",onclick:()=>abrePremium()},`+ ${esc(nome)} <span class="pro-mini">PRO</span>`));return}
     b.appendChild(el("button",{type:"button",class:"chip add",onclick:()=>{const x={id:uid(),nome:/^Outr/.test(nome)?"":nome,valor:0,freq,cada:cada||undefined,tipo,desde:parc?cid:"",parcelas:parc?12:0};
-      S.desp.push(x);abrirId=x.id;salva();renderContas();focaItem(x.id)}},"+ "+esc(nome)))})}
+      S.desp.push(x);abrirId=x.id;salva();renderContas();focaItem(x.id)}},"+ "+esc(nome)+(dev()&&PRO_CARRO.includes(nome)?' <span class="pro-mini">PRO</span>':"")))})}
 function focaItem(id){const it=document.querySelector(`[data-id="${id}"]`);if(!it)return;it.scrollIntoView({block:"center",behavior:"smooth"});
   const i=it.querySelector(it.querySelector("input[data-nome]").value?"input[data-valor]":"input[data-nome]");setTimeout(()=>i&&i.focus(),250)}
 function itemConta(lista,x,opts){const it=el("details",{class:"item","data-id":x.id});if(abrirId===x.id)it.open=true;

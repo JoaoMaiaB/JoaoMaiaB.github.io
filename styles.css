@@ -346,3 +346,8 @@ details.item>:last-child{margin-bottom:10px}
 .resumo-img{width:100%;max-width:320px;justify-self:center;border-radius:14px;margin:10px auto;display:block;border:1px solid var(--line)}
 .v-trial{font-size:.82rem;color:var(--muted);text-align:center;margin:6px 0 0}
 .venda>.btn.big{width:auto}
+/* modo desenvolvedor: selo PRO nos recursos do Premium */
+.dev-aviso{border:2px dashed var(--gold);background:var(--gold-bg);display:grid;gap:6px}
+.dev-aviso p,.dev-aviso ul{margin:0;font-size:.86rem}
+.dev-aviso ul{padding-left:18px}
+body.dev .pro-card>h2::after,body.dev .pro-card h3::after,body.dev .pro-card .h-row h2::after{content:"PRO";font-size:.62rem;font-weight:800;background:var(--gold-bg);color:var(--gold);padding:1px 5px;border-radius:4px;margin-left:6px;vertical-align:middle}

@@ -9,7 +9,7 @@ function renderAjustes(){const cd=$("chipsDia");cd.innerHTML="";const opc=[1,5,1
   $("cfgInicio").value=S.cfg.inicio||"";
   document.querySelectorAll("#tema button").forEach(b=>b.setAttribute("aria-checked",String(b.dataset.t===(S.cfg.tema||"auto"))));
   const cp=$("cardPremium");
-  cp.innerHTML=pro()?`<h2>Premium ativo</h2><p class="muted">${S.premium.fonte==="play"?"Assinatura pela Google Play. Para cancelar, abra a Play Store › Pagamentos e assinaturas.":"Liberado neste aparelho."}</p>`
+  cp.innerHTML=pro()?`<h2>Premium ativo</h2><p class="muted">${S.premium.fonte==="play"?"Assinatura pela Google Play. Para cancelar, abra a Play Store › Pagamentos e assinaturas.":(S.premium.fonte==="dev"?"Modo desenvolvedor: tudo do Premium liberado para teste. Os recursos do Premium aparecem com o selo PRO.":"Liberado neste aparelho.")}</p>`
     :`<h2>Minha Diária Premium</h2><p class="muted">Finanças completas (cartões, empréstimos, aluguel, dívidas) e pesquisa de custos do carro.</p><button type="button" class="btn" data-premium>Conhecer o Premium</button>`}
 let tDia=null;
 function mudaDia(n,devagar){S.cfg.diaCiclo=n;salva();clearTimeout(tDia);const ap=()=>{cid=cidDe(hoje);tudo()};if(devagar)tDia=setTimeout(ap,600);else ap()}

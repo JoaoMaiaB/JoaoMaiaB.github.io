@@ -33,6 +33,7 @@
       <div class="pend" id="pend" hidden><span class="muted">Faltou lançar:</span><div class="chips" id="pendChips"></div></div>
     </div>
 
+    <div id="devAviso"></div>
     <div id="avisos"></div>
 
     <div class="ring-card card">
@@ -70,12 +71,12 @@
       <div class="badges" id="badges"></div>
     </div>
 
-    <div class="card" id="cardEvol">
+    <div class="card pro-card" id="cardEvol">
       <div class="h-row"><h2>Sua evolução</h2><div class="seg sm" id="evolModo" role="radiogroup" aria-label="Período"><button type="button" data-m="sem">Semanas</button><button type="button" data-m="mes">Meses</button></div></div>
       <div id="evolBox"></div>
     </div>
 
-    <div class="card" id="cardMelhores">
+    <div class="card pro-card" id="cardMelhores">
       <h2>Melhores dias e turnos</h2>
       <div id="melhoresBox"></div>
     </div>
@@ -117,7 +118,7 @@
       <dl class="kv" id="kmRes"></dl>
       <p class="muted" id="kmDica"></p>
       <p class="muted">Óleo, pneus e alinhamento podem ser cadastrados "a cada X km" em Custos do carro. Eles entram aqui.</p>
-      <div id="abastBox"></div>
+      <div id="abastBox" class="pro-card"></div>
     </div>
 
     <!-- Grátis: um número só -->
@@ -134,12 +135,12 @@
 
     <!-- Premium: finanças completas -->
     <div id="premiumContas" hidden>
-      <div class="card">
+      <div class="card pro-card">
         <h2>Contas da casa e dívidas</h2>
         <div class="chips add" id="chipsCasa"></div>
         <div id="listaCasa" class="items"></div>
       </div>
-      <div class="card">
+      <div class="card pro-card">
         <h2>Faturas e contas só de <span class="nomeCiclo"></span></h2>
         <p class="muted">Valores que mudam todo mês, como a fatura de cada cartão.</p>
         <div id="listaExtra" class="items"></div>
@@ -148,7 +149,7 @@
           <button type="button" class="btn ghost" id="copiaExtra">Copiar do ciclo anterior</button>
         </div>
       </div>
-      <div class="card">
+      <div class="card pro-card">
         <h2>Outras entradas</h2>
         <p class="muted">Salário, pensão, aluguel recebido. Reduz o que você precisa faturar.</p>
         <div id="listaEnt" class="items"></div>
@@ -205,7 +206,7 @@
       </div>
     </div>
     <div class="card">
-      <h2>Sobre</h2>
+      <h2 id="sobreH">Sobre</h2>
       <p class="muted">O app Minha Diária não tem ligação com Uber, 99, inDrive ou outra empresa. Seus dados ficam no seu aparelho. <a href="privacidade.html">Política de privacidade</a>.</p>
       <div class="row-btns">
         <button type="button" class="btn ghost" id="refazer">Refazer configuração inicial</button>
@@ -290,6 +291,7 @@
 <script src="js/lembretes.js"></script>
 <script src="js/conquistas.js"></script>
 <script src="js/analise.js"></script>
+<script src="js/dev.js"></script>
 <script src="js/inicia.js"></script>
 </body>
 </html>
