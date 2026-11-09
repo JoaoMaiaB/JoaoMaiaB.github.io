@@ -7,7 +7,8 @@ const diasEntre=(a,b)=>Math.round((fromKey(b)-fromKey(a))/864e5);
 const somaDias=(k,n)=>{const d=fromKey(k);d.setDate(d.getDate()+n);return key(d)};
 
 // 1. Backup: lembra a cada 15 dias, depois que a pessoa já tem lançamentos
-function avisoBackup(){const ks=Object.keys(S.lanc).sort();if(!S.configurado||ks.length<3)return null;
+function avisoBackup(){if(logado())return null;// com conta, os dados já estão na nuvem
+  const ks=Object.keys(S.lanc).sort();if(!S.configurado||ks.length<3)return null;
   if(S.cfg.adiaBackup&&S.cfg.adiaBackup>hoje)return null;
   const desde=S.cfg.ultBackup||ks[0];const d=diasEntre(desde,hoje);if(d<15)return null;
   return{cls:"warn",titulo:S.cfg.ultBackup?`Seu último backup foi há ${d} dias`:"Você ainda não fez nenhum backup",

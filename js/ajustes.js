@@ -31,4 +31,5 @@ async function importa(f,statusEl){try{const d=JSON.parse(await f.text());
 $("bkImport").addEventListener("change",async ev=>{const f=ev.target.files[0];ev.target.value="";if(f)importa(f,$("bkStatus"))});
 $("refazer").onclick=()=>abreWizard();
 $("apagar").onclick=()=>{if(!confirm("Apagar contas, rotina e lançamentos deste aparelho? Isso não pode ser desfeito."))return;
+  if(logado()){conta=null;guardaConta()}// sai da conta antes, para não apagar os dados da nuvem
   const prem=S.premium;try{localStorage.removeItem(LS)}catch(e){}S=vazio();if(prem.fonte==="play")S.premium=prem;cid=cidDe(hoje);aplicaTema();tudo();vai("inicio");abreWizard()};

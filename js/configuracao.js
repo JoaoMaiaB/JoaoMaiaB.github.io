@@ -13,7 +13,7 @@ function passoW(){const p=W.passo;const nav=(prox,txt)=>`<div class="wz-nav">${p
   const topo=`<div class="wz-top"><div class="dots">${Array.from({length:TOTAL_W},(_,i)=>`<i class="${i<=p?"on":""}"></i>`).join("")}</div>${S.configurado?'<button type="button" class="ib" data-close aria-label="Fechar">✕</button>':""}</div>`;
   let h="";
   if(p===0)h=`${topo}<h2 class="wz-h">Quanto você precisa fazer por dia?</h2><p>Em um minuto o app descobre, com base nas suas contas e na sua rotina. Depois é só lançar quanto fez, em dois toques.</p>
-    ${nav(0,"Começar")}<label class="btn ghost file wide">Já tenho um backup<input type="file" id="wImport" accept="application/json,.json"></label><p class="status" id="wStatus"></p>`;
+    ${nav(0,"Começar")}${nuvemLigada()?'<button type="button" class="btn ghost wide" id="wConta">Já tenho conta: entrar</button>':""}<label class="btn ghost file wide">Já tenho um backup<input type="file" id="wImport" accept="application/json,.json"></label><p class="status" id="wStatus"></p>`;
   else if(p===1)h=`${topo}<h2 class="wz-h">Em que dia vencem suas contas?</h2><p class="muted">Seu "mês" vai desse dia até a véspera do próximo vencimento.</p><div class="chips big" id="wDias"></div><div id="wDiaOutro"></div>${nav()}`;
   else if(p===2)h=`${topo}<h2 class="wz-h">Quais custos o seu carro tem?</h2><p class="muted">Toque para marcar e coloque o valor. O combustível vem depois.</p><div class="chips" id="wCarroChips"></div><div id="wCarroVals" class="wz-vals"></div>${nav()}`;
   else if(p===3)h=`${topo}<h2 class="wz-h">Defina sua meta mensal</h2><p class="muted">Quanto você quer que sobre no mês, depois do carro e do combustível, para pagar suas contas e para você. Pode ser aproximado. Com isso o app calcula quanto você precisa fazer por dia e por mês.</p>
@@ -29,7 +29,7 @@ function passoW(){const p=W.passo;const nav=(prox,txt)=>`<div class="wz-nav">${p
       <p class="muted">Agora, no fim de cada dia, toque em <b>+</b> e digite quanto fez, os km rodados e o combustível.</p><button type="button" class="btn big" id="wFim">Começar a usar</button>`}
   const b=folha(h,!S.configurado);
   const vai_=b.querySelector("#wVai"),volta=b.querySelector("#wVolta");if(volta)volta.onclick=()=>{guardaW();W.passo--;passoW()};if(vai_)vai_.onclick=()=>{guardaW();W.passo++;passoW()};
-  if(p===0){b.querySelector("#wImport").onchange=async ev=>{const f=ev.target.files[0];if(f&&await importa(f,b.querySelector("#wStatus"))){fecha("sheet");toast("Backup importado. Tudo pronto!")}}}
+  if(p===0){if(b.querySelector("#wConta"))b.querySelector("#wConta").onclick=()=>abreConta("entrar");b.querySelector("#wImport").onchange=async ev=>{const f=ev.target.files[0];if(f&&await importa(f,b.querySelector("#wStatus"))){fecha("sheet");toast("Backup importado. Tudo pronto!")}}}
   if(p===1){const box=b.querySelector("#wDias");const pinta=()=>{box.innerHTML="";[1,5,10,15,20,25].forEach(n=>box.appendChild(el("button",{type:"button",class:"chip"+(W.dia===n?" on":""),onclick:()=>{W.dia=n;pinta();st.setValor(n)}},"Dia "+n)))};
     const st=stepper({rot:"Outro dia",valor:W.dia,passo:1,min:1,max:28,fmt:v=>"Dia "+v,on:v=>{W.dia=v;pinta()}});b.querySelector("#wDiaOutro").appendChild(st);pinta()}
   if(p===2){const ch=b.querySelector("#wCarroChips"),vals=b.querySelector("#wCarroVals");

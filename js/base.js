@@ -55,7 +55,7 @@ function normaliza(d){const b=vazio();
   if(d.v===1||d.configurado===undefined)o.configurado=!!(o.desp.length||Object.values(o.rot).some(r=>+r.h>0));
   o.v=2;return o}
 let avisoGravar=false;
-function salva(){try{localStorage.setItem(LS,JSON.stringify(S));return true}
+function salva(){try{localStorage.setItem(LS,JSON.stringify(S));if(typeof nuvemMudou==="function")nuvemMudou();return true}
   catch(e){if(!avisoGravar){avisoGravar=true;toast("Este aparelho não deixou guardar os dados. Faça um backup em Ajustes.")}return false}}
 if(navigator.storage&&navigator.storage.persist){try{navigator.storage.persist()}catch(e){}}
 const pro=()=>!!S.premium.ativo;

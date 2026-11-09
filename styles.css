@@ -351,3 +351,5 @@ details.item>:last-child{margin-bottom:10px}
 .dev-aviso p,.dev-aviso ul{margin:0;font-size:.86rem}
 .dev-aviso ul{padding-left:18px}
 body.dev .pro-card>h2::after,body.dev .pro-card h3::after,body.dev .pro-card .h-row h2::after{content:"PRO";font-size:.62rem;font-weight:800;background:var(--gold-bg);color:var(--gold);padding:1px 5px;border-radius:4px;margin-left:6px;vertical-align:middle}
+.danger-t{color:var(--bad)!important;border-color:var(--bad)!important}
+.btn.wide{width:100%}
