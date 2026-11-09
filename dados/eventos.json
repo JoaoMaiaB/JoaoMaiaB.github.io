@@ -1,0 +1,21 @@
+{"_sobre":"Possíveis Dinâmicos: datas de grande movimento. Sem 'cidade' vale para o Brasil todo. Regras de data: fixo DD/MM; pascoa = dias depois da Páscoa (negativo = antes); semana [n, dia da semana 0=dom, mês] = n-ésimo dia da semana do mês; ultima [dia da semana, mês] = último daquele dia no mês; mais = dias somados; dias = quantos dias seguidos.",
+"eventos":[
+{"nome":"Réveillon","local":"Festas da virada, praias e casas de show. A volta é de madrugada.","fixo":"31/12","ini":"21:00","fim":"04:00"},
+{"nome":"Véspera de Natal","local":"Ceias em casas de família e restaurantes.","fixo":"24/12","ini":"18:00","fim":"23:00"},
+{"nome":"Dia das Mães","local":"Restaurantes e almoços em família.","semana":[2,0,5],"ini":"11:00","fim":"15:00"},
+{"nome":"Dia dos Pais","local":"Restaurantes e almoços em família.","semana":[2,0,8],"ini":"11:00","fim":"15:00"},
+{"nome":"Dia dos Namorados","local":"Restaurantes e bares.","fixo":"12/06","ini":"19:00","fim":"00:00"},
+{"nome":"Black Friday","local":"Shoppings e centros comerciais.","semana":[4,4,11],"mais":1,"ini":"18:00","fim":"23:00"},
+{"nome":"Carnaval","local":"Blocos de rua, clubes e festas.","pascoa":-50,"dias":4,"ini":"14:00","fim":"04:00"},
+{"nome":"Réveillon de Copacabana","local":"Praia de Copacabana","cidade":3304557,"fixo":"31/12","ini":"20:00","fim":"04:00"},
+{"nome":"Desfiles das escolas de samba","local":"Sambódromo da Marquês de Sapucaí","cidade":3304557,"pascoa":-49,"dias":2,"ini":"21:00","fim":"06:00"},
+{"nome":"Réveillon da Avenida Paulista","local":"Avenida Paulista","cidade":3550308,"fixo":"31/12","ini":"20:00","fim":"02:00"},
+{"nome":"Desfiles das escolas de samba","local":"Sambódromo do Anhembi","cidade":3550308,"pascoa":-51,"dias":2,"ini":"22:00","fim":"06:00"},
+{"nome":"Carnaval nos circuitos","local":"Circuitos Barra-Ondina e Campo Grande","cidade":2927408,"pascoa":-52,"dias":6,"ini":"14:00","fim":"04:00"},
+{"nome":"Galo da Madrugada","local":"Saída do Forte das Cinco Pontas, centro do Recife","cidade":2611606,"pascoa":-50,"ini":"07:00","fim":"16:00"},
+{"nome":"Carnaval de Olinda","local":"Sítio Histórico de Olinda","cidade":2609600,"pascoa":-50,"dias":4,"ini":"10:00","fim":"02:00"},
+{"nome":"Círio de Nazaré","local":"Da Catedral da Sé à Praça Santuário de Nazaré","cidade":1501402,"semana":[2,0,10],"ini":"06:00","fim":"14:00"},
+{"nome":"Festival de Parintins","local":"Bumbódromo","cidade":1303403,"ultima":[5,6],"dias":3,"ini":"20:00","fim":"03:00"},
+{"nome":"São João: noite da véspera","local":"Parque do Povo","cidade":2504009,"fixo":"23/06","ini":"18:00","fim":"04:00"},
+{"nome":"São João: noite da véspera","local":"Pátio do Forró","cidade":2604106,"fixo":"23/06","ini":"18:00","fim":"04:00"}
+]}

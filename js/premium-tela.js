@@ -11,6 +11,7 @@ async function abrePremium(origem){
   const ben=[["alvo","Uma meta que cobre tudo","Aluguel, luz, cartões e empréstimos entram na sua meta do dia. Nada de susto no dia do vencimento."],
     ["cal","Veja o fim de cada dívida","Cadastre as parcelas e acompanhe mês a mês quando cada uma acaba e quanto sobra a mais depois disso."],
     ["car","Gaste menos com o carro","Valor do seu carro na Tabela FIPE, IPVA estimado e oficinas, pneus e postos perto de você para comparar preço."],
+    ["cal","Feriados e Possíveis Dinâmicos","Feriados do país, do estado e da sua cidade com meta própria, e aviso de véspera de feriadão, grandes eventos e chuva prevista."],
     ["rec","Lucro de verdade","Estacionamento e plano de celular entram na conta. O lucro que o app mostra é o que fica no seu bolso."]];
   const b=folha(`<div class="venda">
     <div class="v-hero"><div class="wz-top"><span class="pro-tag">Premium</span><button type="button" class="ib" data-close aria-label="Fechar">✕</button></div>

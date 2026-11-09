@@ -76,12 +76,16 @@ function renderContas(){
     lista("listaCasa",S.desp,x=>x.tipo!=="carro",{freq:true,parcelas:true},"Toque num atalho para adicionar aluguel, contas, empréstimos e dívidas.");
     renderExtra();lista("listaEnt",S.ent,()=>true,{freq:false,parcelas:true},"Nenhuma entrada.")}
   $("cfgRetirada").value=inVal(S.cfg.retirada);
-  stComb.setValor(+S.cfg.combKm||.55);stRkm.setValor(+S.cfg.rkm||1.8);
+  stLitro.setValor(litroAtual());stKml.setValor(kmlAtual());$("combCalc").textContent=`Estimativa: ${brl(S.cfg.combKm)} de combustível por km.`;stRkm.setValor(+S.cfg.rkm||1.8);
   renderResumoContas();abrirId=null}
 $("cfgRetirada").addEventListener("change",ev=>{const v=num(ev.target.value);if(v==null||isNaN(v)||v<0){ev.target.value=inVal(S.cfg.retirada);return}
   S.cfg.retirada=v;salva();renderResumoContas();renderInicio()});
 const mudaKm=()=>{salva();renderResumoContas();renderInicio();renderDias()};
-const stComb=stepper({rot:"Gasto de combustível por km (estimativa)",valor:.55,passo:.05,min:.1,max:3,fmt:v=>brl(v),on:v=>{S.cfg.combKm=v;mudaKm()}});
+// Combustível por km = preço do litro ÷ km por litro (quem não informou ainda começa com 10 km/l)
+const kmlAtual=()=>+S.cfg.kmPorLitro||10;const litroAtual=()=>+S.cfg.precoLitro||Math.round((+S.cfg.combKm||.55)*kmlAtual()*100)/100;
+const mudaComb=()=>{S.cfg.combKm=Math.round(S.cfg.precoLitro/S.cfg.kmPorLitro*100)/100;$("combCalc").textContent=`Estimativa: ${brl(S.cfg.combKm)} de combustível por km.`;mudaKm()};
+const stLitro=stepper({rot:"Preço do litro",valor:6.3,passo:.1,min:1,max:15,fmt:v=>brl(v),on:v=>{S.cfg.precoLitro=v;S.cfg.kmPorLitro=kmlAtual();mudaComb()}});
+const stKml=stepper({rot:"Quantos km o carro faz por litro",valor:10,passo:.5,min:3,max:40,fmt:v=>nf(v)+" km/l",on:v=>{S.cfg.kmPorLitro=v;S.cfg.precoLitro=litroAtual();mudaComb()}});
 const stRkm=stepper({rot:"Quanto ganha por km (estimativa)",valor:1.8,passo:.1,min:.5,max:6,fmt:v=>brl(v),on:v=>{S.cfg.rkm=v;mudaKm()}});
-$("combBox").appendChild(stComb);$("rkmBox").appendChild(stRkm);
+$("combBox").append(stLitro,stKml,el("p",{class:"muted",id:"combCalc"}));$("rkmBox").appendChild(stRkm);
 $("btnPesquisa").onclick=()=>pro()?abrePesquisa():abrePremium("pesquisa");

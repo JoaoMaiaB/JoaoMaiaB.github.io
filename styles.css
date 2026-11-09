@@ -353,3 +353,22 @@ details.item>:last-child{margin-bottom:10px}
 body.dev .pro-card>h2::after,body.dev .pro-card h3::after,body.dev .pro-card .h-row h2::after{content:"PRO";font-size:.62rem;font-weight:800;background:var(--gold-bg);color:var(--gold);padding:1px 5px;border-radius:4px;margin-left:6px;vertical-align:middle}
 .danger-t{color:var(--bad)!important;border-color:var(--bad)!important}
 .btn.wide{width:100%}
+
+/* configuração: separação entre os itens e os valores; horas por dia */
+.wz-sep{margin:6px 0 0;padding-top:12px;border-top:1px solid var(--line);font-weight:600;font-size:.9rem;color:var(--muted)}
+.wz-dias{display:grid;gap:8px;margin-top:4px}
+.wz-dias>.btn{justify-self:start}
+/* feriados e possíveis dinâmicos */
+.cid-sel{display:grid;grid-template-columns:90px 1fr;gap:8px}
+.cid-atual{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.linkbtn{background:none;border:0;padding:0;color:var(--accent);font:inherit;font-weight:600;text-decoration:underline;cursor:pointer}
+.fer-lista,.din-lista{display:grid;gap:8px;margin:8px 0}
+.fer,.din{display:grid;grid-template-columns:58px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:12px}
+.fer.on{border-color:var(--accent);background:var(--accent-soft)}
+.fer-d{display:grid;text-align:center;line-height:1.15}.fer-d small,.fer-t small{color:var(--muted);font-size:.8rem}
+.fer-t{display:grid;gap:2px;min-width:0}.fer-t b{overflow-wrap:anywhere}
+.tag{display:inline-block;font-size:.7rem;font-weight:700;padding:1px 6px;border-radius:6px;background:var(--chip);color:var(--fg)}
+.tag.t-est{background:var(--warn-bg);color:var(--warn)}.tag.t-mun{background:var(--good-bg);color:var(--good)}.tag.t-fac{background:var(--chip);color:var(--muted)}
+.din.t-chuva{border-left:4px solid var(--accent)}.din.t-fer{border-left:4px solid var(--warn)}.din.t-cid,.din.t-nac{border-left:4px solid var(--gold)}
+.fonte{font-size:.78rem}
+.wz-dias .stepper{display:grid;grid-template-columns:48px 1fr;align-items:center;gap:8px}.wz-dias .st-rot{margin:0;font-weight:600}

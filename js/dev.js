@@ -8,7 +8,7 @@ const dev=()=>pro()&&S.premium.fonte==="dev";
 async function sha256(t){const h=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t));return[...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,"0")).join("")}
 const RECURSOS_PRO=["Estacionamento e plano de celular nos custos do carro","Contas da casa, cartões, empréstimos e dívidas","Faturas por ciclo e outras entradas",
   "Pesquisa FIPE, IPVA e preços perto de você","Aviso de manutenção por km","Gráfico da evolução","Melhores dias e turnos",
-  "Litros, consumo em km/l e postos mais baratos","Lembrete do DAS do MEI"];
+  "Litros, consumo em km/l e postos mais baratos","Lembrete do DAS do MEI","Feriados da cidade e Possíveis Dinâmicos"];
 function renderDev(){document.body.classList.toggle("dev",dev());const box=$("devAviso");
   if(!dev()){box.innerHTML="";return}
   box.innerHTML=`<div class="card dev-aviso"><b>Modo desenvolvedor: Premium liberado para teste</b>

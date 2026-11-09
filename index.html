@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <!-- Segurança: o navegador só roda scripts deste site e só conversa com os serviços listados. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://parallelum.com.br https://nominatim.openstreetmap.org https://router.project-osrm.org https://*.workers.dev https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://parallelum.com.br https://nominatim.openstreetmap.org https://router.project-osrm.org https://*.workers.dev https://api.open-meteo.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <title>Minha Diária</title>
 <meta name="description" content="Controle diário para motoristas de aplicativo: quanto faturar por dia para pagar todas as contas do mês.">
 <meta name="theme-color" content="#0f7a5a">
@@ -47,6 +47,11 @@
       </dl>
     </div>
     <p class="muted center" id="tFaltaNote"></p>
+
+    <div class="card pro-card" id="cardDin">
+      <h2>Possíveis Dinâmicos</h2>
+      <div id="dinBox"></div>
+    </div>
 
     <div class="card upsell" id="upInicio">
       <span class="pro-tag">Premium</span>
@@ -165,6 +170,10 @@
       <p class="muted">Toque no dia para ligar ou desligar. Ajuste as horas e quanto faz por hora com − e +.</p>
       <div id="rotina" class="rot"></div>
       <p class="sum" id="rotSoma"></p>
+    </div>
+    <div class="card pro-card" id="cardFer">
+      <h2>Feriados</h2>
+      <div id="ferBox"></div>
     </div>
     <div class="card">
       <h2>Datas especiais</h2>
@@ -295,6 +304,7 @@
 <script src="js/lembretes.js"></script>
 <script src="js/conquistas.js"></script>
 <script src="js/analise.js"></script>
+<script src="js/feriados.js"></script>
 <script src="js/dev.js"></script>
 <script src="js/nuvem-config.js"></script>
 <script src="js/nuvem.js"></script>
